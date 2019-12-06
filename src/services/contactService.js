@@ -10,7 +10,11 @@ const getPermission = async (permissionTypes) => {
 export const getContactsFromPhone = async () => {
   await getPermission([Permissions.CONTACTS]);
   const { data } = await Contacts.getContactsAsync({
-    fields: [Contacts.Fields.firstName],
+    fields: [
+      Contacts.Fields.FirstName,
+      Contacts.Fields.PhoneNumbers,
+      Contacts.Fields.Image
+    ],
   });
 
   if (data.length > 0) {

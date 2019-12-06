@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import { View, Text, TouchableHighlight } from 'react-native';
 import styles from './styles';
 
@@ -22,5 +22,17 @@ const Toolbar = ({ onAdd, onRemove, hasSelectedContacts }) => (
     </TouchableHighlight>
   </View>
 );
+
+Toolbar.defaultProps = {
+  onAdd: undefined,
+  onRemove: undefined,
+  hasSelectedContacts: false,
+};
+
+Toolbar.propTypes = {
+  onAdd: PropTypes.func,
+  onRemove: PropTypes.func,
+  hasSelectedContacts: PropTypes.bool,
+};
 
 export default Toolbar;
