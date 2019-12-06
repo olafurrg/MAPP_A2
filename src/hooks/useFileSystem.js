@@ -30,29 +30,30 @@ const copyFile = async (file, newLocation) => {
   }));
 };
 
-const useFileSystem = ({ directory: propDirectory }) => {
+const useFileSystem = (propDirectory) => {
   const directory = `${FileSystem.documentDirectory}${propDirectory}`;
-
-  const addFile = useCallback(async (fileLocation, fileType = 'image') => {
-    const folderSplit = fileLocation.split('/');
-    const fileName = folderSplit[folderSplit.length - 1];
-    await onException(() => copyFile(fileLocation, `${directory}/${fileName}`));
-
-    return {
-      name: fileName,
-      type: fileType,
-      file: await loadFile(fileName)
-    };
-  }, [directory]);
-
-  const removeFile = useCallback(async (fileName) => {
-    return await onException(() => FileSystem.deleteAsync(`${directory}/${fileName}`, { idempotent: true }));
-  }, [directory]);
 
   const loadFile = useCallback(async (fileName, type = 'text') => {
     return await onException(() => FileSystem.readAsStringAsync(`${directory}/${fileName}`, {
       encoding: type === 'image' ? FileSystem.EncodingType.Base64 : FileSystem.EncodingType.UTF8,
     }));
+  }, [directory]);
+
+  const addFile = useCallback(async (fileLocation, newFileName, fileType = 'text') => {
+    const folderSplit = fileLocation.split('/');
+    const extension = folderSplit[folderSplit.length - 1].split('.')[1];
+    const newFileLocation = `${directory}/${newFileName}.${extension}`;
+    await onException(() => copyFile(fileLocation, newFileLocation));
+
+    return {
+      name: newFileName,
+      uri: newFileLocation,
+      file: await loadFile(newFileName, fileType)
+    };
+  }, [directory]);
+
+  const removeFile = useCallback(async (fileName) => {
+    return await onException(() => FileSystem.deleteAsync(`${directory}/${fileName}`, { idempotent: true }));
   }, [directory]);
 
   getAllFiles = useCallback(async () => {
@@ -76,7 +77,7 @@ const useFileSystem = ({ directory: propDirectory }) => {
     // runAsync();
   }, [directory])
 
-  return [getAllFiles];
+  return [getAllFiles, addFile];
 
 }
 

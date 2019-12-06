@@ -26,7 +26,7 @@ const ContactInfo = ({ name, phoneNumber, image }) => (
   </View>
 );
 
-ContactInfo.propTypes = {
+ContactInfo.defaultProps = {
   image: undefined
 };
 

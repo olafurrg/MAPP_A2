@@ -1,4 +1,3 @@
-import React from 'react';
 import * as Contacts from 'expo-contacts';
 import * as Permissions from 'expo-permissions';
 

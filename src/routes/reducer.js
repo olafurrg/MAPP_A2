@@ -77,7 +77,15 @@ const reducer = (state, { type, payload }) => {
   }
 
   if (type === 'CREATE') {
+    const { name, phoneNumber, photo } = payload;
+    const { contacts, search, isAscending } = state;
+    const newContacts = [...contacts, { index: contacts.length, name, phoneNumber, photo }]
+    const newFilteredIndex = filter(newContacts, search, isAscending);
 
+    return update(state, {
+      contacts: { $set: newContacts },
+      filteredIndex: { $set: newFilteredIndex },
+    });
   }
 
   if (type === 'DELETE') {

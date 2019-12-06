@@ -2,9 +2,10 @@ import React, { useReducer, useMemo } from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { reducer, initialState, action } from './reducer';
-import { ContactContext, DispatchContext } from './context';
+import { StateContext, DispatchContext } from './context';
 
 import Phonebook from '../views/Phonebook';
+import Contact from '../views/Contact';
 
 const StackNavigator = createStackNavigator({
   Phonebook: {
@@ -14,7 +15,7 @@ const StackNavigator = createStackNavigator({
     }),
   },
   Contact: {
-    screen: Phonebook,
+    screen: Contact,
     navigationOptions: ({ navigation }) => ({
       title: navigation.getParam('contactName'),
     }),
@@ -28,9 +29,9 @@ export default () => {
 
   return (
     <DispatchContext.Provider value={dispatch}>
-      <ContactContext.Provider value={state}>
+      <StateContext.Provider value={state}>
         <AppContainer />
-      </ContactContext.Provider>
+      </StateContext.Provider>
     </DispatchContext.Provider>
   );
 }

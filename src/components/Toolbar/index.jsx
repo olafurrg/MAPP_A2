@@ -2,32 +2,34 @@ import React, { useContext, useState, useCallback } from 'react';
 import * as PropTypes from 'prop-types';
 import { View, Text, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { ContactContext, DispatchContext } from '../../routes/context';
+import PhonebookContext from '../../views/Phonebook/context';
 import { action } from '../../routes/reducer';
 import styles from './styles';
 
 // Possibly change this up and add search filter in here
-const Toolbar = ({ onAdd, onRemove, hasSelectedContacts }) => {
-  const dispatch = useContext(DispatchContext);
-  const { isAscending, search } = useContext(ContactContext);
+const Toolbar = ({ isAscending, search: searchProp, hasSelectedContacts = false }) => {
+  const { current: { search, toggleOrder, openContactForm } } = useContext(PhonebookContext);
 
   const handleSearch = useCallback((text) => {
-    dispatch({type: action.SEARCH, payload: { search: text }});
-  }, [dispatch]);
+    search(text);
+  }, [search]);
 
   const handleOrder = useCallback((text) => {
-    dispatch({type: action.ORDER, payload: { isAscending: !isAscending }});
-  }, [dispatch, isAscending]);
+    toggleOrder(!isAscending);
+  }, [toggleOrder, isAscending]);
+
+  const handleAddPress = useCallback(() => {
+    openContactForm();
+  }, [openContactForm]);
 
   return (
     <View style={styles.container}>
       <View style={styles.toolbar}>
-        <TouchableHighlight style={styles.toolbarAction} onPress={onAdd}>
+        <TouchableHighlight style={styles.toolbarAction} onPress={handleAddPress}>
           <Text style={styles.toolbarActionText}>Add Contact</Text>
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.toolbarAction}
-          onPress={onRemove}
           disabled={!hasSelectedContacts}
         >
           <Text style={styles.toolbarActionText, hasSelectedContacts ? {}
@@ -39,6 +41,7 @@ const Toolbar = ({ onAdd, onRemove, hasSelectedContacts }) => {
       </View>
       <View style={styles.filter}>
         <TextInput
+          value={searchProp}
           onChangeText={handleSearch}
           style={styles.searchInput}
           placeholder="Search..."

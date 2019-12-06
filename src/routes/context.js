@@ -1,7 +1,7 @@
 import React from 'react';
 
-const ContactContext = React.createContext();
+const StateContext = React.createContext();
 
 const DispatchContext = React.createContext();
 
-export { ContactContext, DispatchContext };
+export { StateContext, DispatchContext };
