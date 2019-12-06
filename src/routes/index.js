@@ -25,11 +25,10 @@ const AppContainer = createAppContainer(StackNavigator);
 
 export default () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { contacts } = state;
 
   return (
     <DispatchContext.Provider value={dispatch}>
-      <ContactContext.Provider value={contacts}>
+      <ContactContext.Provider value={state}>
         <AppContainer />
       </ContactContext.Provider>
     </DispatchContext.Provider>

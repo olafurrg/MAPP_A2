@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import * as PropTypes from 'prop-types';
 import { View, FlatList } from 'react-native';
 import ContactInfo from '../ContactInfo';
@@ -6,14 +6,15 @@ import { ContactContext } from '../../routes/context';
 import styles from './styles';
 
 const ContactList = () => {
-  const contacts = useContext(ContactContext);
+  const contactContext = useContext(ContactContext);
+  const { contacts, filteredIndex } = contactContext;
 
-  console.log(contacts);
+  const filteredContacts = useMemo(() => filteredIndex.map(c => contacts[c]), [contacts, filteredIndex])
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={contacts}
+        data={filteredContacts}
         renderItem={({ item: { name, phoneNumber, photo } }) => <ContactInfo
           name={name}
           phoneNumber={phoneNumber}

@@ -1,14 +1,16 @@
-import React, { useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import * as PropTypes from 'prop-types';
 import { View, Text, TextInput, TouchableHighlight } from 'react-native';
+import { DispatchContext } from '../../routes/context';
+import { action } from '../../routes/reducer';
 import styles from './styles';
 
 // Possibly change this up and add search filter in here
 const Toolbar = ({ onAdd, onRemove, hasSelectedContacts }) => {
-    const [search, setSearch] = useState('');
+  const dispatch = useContext(DispatchContext);
     const handleSearch = useCallback((text) => {
-      setSearch(text);
-    }, [setSearch]);
+      dispatch({type: action.SEARCH, payload: { search: text }});
+    }, [dispatch]);
 
     return (
       <View style={styles.container}>
@@ -30,7 +32,6 @@ const Toolbar = ({ onAdd, onRemove, hasSelectedContacts }) => {
         </View>
         <View style={styles.search}>
           <TextInput
-            value={search}
             onChangeText={handleSearch}
             style={styles.searchInput}
             placeholder="Search..."
