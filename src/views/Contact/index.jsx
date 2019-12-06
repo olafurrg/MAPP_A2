@@ -25,7 +25,6 @@ const Contact = ({ navigation }) => {
     if (image !== '') {
       newImage = await copyImage(image, fileName, 'image');
     }
-    console.log('newImage', newImage.uri);
     const newContact = {
       name, phoneNumber, photo: newImage.uri, fileName
     };
@@ -41,11 +40,9 @@ const Contact = ({ navigation }) => {
     if (image !== '') {
       newImage = await copyImage(image, fileName, 'image');
     }
-    console.log('newImage', newImage.uri, fileName);
     const newContact = {
       index, name, phoneNumber, photo: newImage.uri, fileName
     };
-    console.log(newContact);
     const newFile = await newJson(fileName, JSON.stringify(newContact));
     dispatch({ type: action.UPDATE, payload: newContact});
   }, [dispatch, newJson, copyImage, navigate, contacts]);

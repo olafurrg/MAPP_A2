@@ -28,20 +28,21 @@ const Phonebook = ({ navigation }) => {
 
   const importContacts = useCallback(async () => {
     const contacts = await getContactsFromPhone();
+    console.log(contacts);
     const fromContacts = contacts.map(obj => ({
       id: obj.id,
       name: obj.name,
-      phoneNumber: obj.phoneNumbers.length > 0 ? obj.phoneNumbers[0].number : '',
+      phoneNumber: typeof obj.phoneNumbers !== 'undefined' ? obj.phoneNumbers[0].number : undefined,
       photo: obj.imageAvailable ? obj.image.uri : undefined,
     }));
     for (let i = 0; i < fromContacts.length; i += 1) {
-      if (typeof fromContacts[i].photo !== undefined) {
+      if (fromContacts[i].photo !== undefined) {
         let newImage = await copyImage(fromContacts[i].photo, 'contact' + fromContacts[i].id);
-        console.log(newImage);
         fromContacts[i].photo = newImage.uri;
       }
       let newFile = await newJson('contact' + fromContacts[i].id, JSON.stringify({ ...fromContacts[i] }));
     }
+    console.log(fromContacts);
     await loadJsonFiles();
   }, [contacts, getContactsFromPhone, copyImage, newJson, loadJsonFiles]);
 
