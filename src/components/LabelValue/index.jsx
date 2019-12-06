@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import * as PropTypes from 'prop-types';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import styles from './styles';
 
-const LabelValue = ({ style, label, value, editable, onChange, keyboardType }) => {
+const LabelValue = ({ style, label, value, editable, onChange, onClick, keyboardType }) => {
   const containerStyle = useMemo(() => [styles.container, style], [style]);
 
   return (
@@ -23,6 +23,14 @@ const LabelValue = ({ style, label, value, editable, onChange, keyboardType }) =
           onChangeText={onChange}
           keyboardType={keyboardType}
         />
+      ) : typeof onClick === 'function' ? (
+        <TouchableOpacity style={styles.value} onPress={onClick}>
+          <Text
+            style={styles.valueClickable}
+          >
+            {value}
+            </Text>
+        </TouchableOpacity>
       ) : (
         <Text
           style={styles.value}

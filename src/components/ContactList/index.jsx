@@ -12,7 +12,7 @@ const ContactList = ({ contacts, filteredIndex }) => {
       {filteredContacts.length > 0 ? (
         <FlatList
           data={filteredContacts}
-          renderItem={({ item: { index, name, photo, fileName } }) => <ContactInfo
+          renderItem={({ item: { index, name, photo } }) => <ContactInfo
             index={index}
             name={name}
             image={photo}

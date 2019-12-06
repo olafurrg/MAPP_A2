@@ -1,7 +1,7 @@
 import React, { useContext, useState, useCallback } from 'react';
 import * as PropTypes from 'prop-types';
 import { withNavigation } from 'react-navigation';
-import { Image, View, Button, Text, TextInput } from 'react-native';
+import { Image, View, Button, Text, TextInput, Linking } from 'react-native';
 import PhonebookContext from '../../views/Contact/context';
 import ImagePicker from '../ImagePicker'
 import LabelValue from '../LabelValue'
@@ -54,7 +54,13 @@ const ContactForm = ({ editable: propEditable, index, name: propName, phoneNumbe
       </View>
       <View style={styles.textBox}>
         <LabelValue label="Name" value={name} editable={editable} onChange={handleNameChange} />
-        <LabelValue label="Phone" value={phoneNumber} editable={editable} onChange={handlePhoneChange}  keyboardType="phone-pad"/>
+        <LabelValue
+          label="Phone"
+          value={phoneNumber}
+          editable={editable}
+          onChange={handlePhoneChange}
+          onClick={() => Linking.openURL(`tel:${phoneNumber}`)}
+          keyboardType="phone-pad"/>
       </View>
       {editable ? (
         <Button title="Save" style={styles.submit} disabled={name === '' || phoneNumber === ''} onPress={handleSubmit} />

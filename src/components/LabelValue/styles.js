@@ -16,6 +16,10 @@ export default StyleSheet.create({
     color: 'black',
     fontSize: 22,
   },
+  valueClickable: {
+    color: 'green',
+    fontSize: 22,
+  },
   editableValue: {
     flex: 4,
     paddingLeft: 10,

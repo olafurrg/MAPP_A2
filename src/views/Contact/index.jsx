@@ -21,14 +21,15 @@ const Contact = ({ navigation }) => {
 
   const create = useCallback(async (name, phoneNumber, image) => {
     const fileName = Date.now().toString();
-    let newImage = image;
+    let newImage = { uri: undefined };
     if (image !== '') {
-      newImage = await copyImage(image, fileName, 'image').uri;
+      newImage = await copyImage(image, fileName, 'image');
     }
+    console.log('newImage', newImage.uri);
     const newContact = {
-      name, phoneNumber, photo: newImage, fileName
+      name, phoneNumber, photo: newImage.uri, fileName
     };
-    const newFile = await newJson(fileName + '.json', JSON.stringify(newContact));
+    const newFile = await newJson(fileName, JSON.stringify(newContact));
     dispatch({ type: action.CREATE, payload: newContact});
     navigate('Phonebook', { contactIndex: null, contactName: null });
   }, [dispatch, newJson, copyImage, navigate]);
@@ -36,15 +37,16 @@ const Contact = ({ navigation }) => {
   const update = useCallback(async (index, name, phoneNumber, image) => {
     const obj = contacts[index];
     const fileName = obj.fileName;
-    let newImage = image;
+    let newImage = { uri: undefined };
     if (image !== '') {
-      newImage = await copyImage(image, fileName, 'image').uri;
+      newImage = await copyImage(image, fileName, 'image');
     }
+    console.log('newImage', newImage.uri, fileName);
     const newContact = {
-      index, name, phoneNumber, photo: newImage, fileName
+      index, name, phoneNumber, photo: newImage.uri, fileName
     };
     console.log(newContact);
-    const newFile = await newJson(fileName + '.json', JSON.stringify(newContact));
+    const newFile = await newJson(fileName, JSON.stringify(newContact));
     dispatch({ type: action.UPDATE, payload: newContact});
   }, [dispatch, newJson, copyImage, navigate, contacts]);
 

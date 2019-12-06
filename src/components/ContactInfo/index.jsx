@@ -8,7 +8,7 @@ import styles from './styles';
 
 const defaultImage = require('../../resources/defaultPortrait.png');
 
-const ContactInfo = ({ index, name, image, newFileName }) => {
+const ContactInfo = ({ index, name, image }) => {
   const { current: { openContactForm } } = useContext(PhonebookContext);
 
   const handlePress = useCallback(() => openContactForm(index), [index]);
@@ -21,7 +21,7 @@ const ContactInfo = ({ index, name, image, newFileName }) => {
           source={typeof image !== 'undefined' && image !== null ? {uri: image+"?time=" + new Date() } : defaultImage}
         />
         <Text style={styles.name}>
-          {name + ' ' + newFileName}
+          {name}
         </Text>
       </TouchableOpacity>
     </View>

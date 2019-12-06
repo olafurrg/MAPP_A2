@@ -84,17 +84,7 @@ const useFileSystem = (propDirectory) => {
     }));
   }, [directory]);
 
-  useEffect(() => {
-    async function runAsync() {
-      await setupDirectory(directory);
-      await FileSystem.writeAsStringAsync(directory + 'mydude.json', JSON.stringify({ name: 'bobs', phoneNumber: '4206969', photo: null }));
-      await FileSystem.writeAsStringAsync(directory + 'mydudette.json', JSON.stringify({ name: 'allison', phoneNumber: '6661337', photo: null }));
-    }
-    // runAsync();
-  }, [directory])
-
   return {loadFile, newFile, copyFile, removeFile, getAllFiles, removeAllFiles};
-
 }
 
 export default useFileSystem;
