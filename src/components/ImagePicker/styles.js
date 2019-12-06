@@ -32,7 +32,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   imagePicker: {
-    height: 200,
+    height: 140,
     minWidth: '80%',
     backgroundColor: 'white',
     alignSelf: 'center',

@@ -77,9 +77,9 @@ const reducer = (state, { type, payload }) => {
   }
 
   if (type === 'CREATE') {
-    const { name, phoneNumber, photo } = payload;
+    const { name, phoneNumber, photo, fileName } = payload;
     const { contacts, search, isAscending } = state;
-    const newContacts = [...contacts, { index: contacts.length, name, phoneNumber, photo }]
+    const newContacts = [...contacts, { index: contacts.length, fileName, name, phoneNumber, photo }]
     const newFilteredIndex = filter(newContacts, search, isAscending);
 
     return update(state, {
@@ -93,7 +93,16 @@ const reducer = (state, { type, payload }) => {
   }
 
   if (type === 'UPDATE') {
+    const { index, name, phoneNumber, photo, fileName } = payload;
+    const { contacts, search, isAscending } = state;
+    const newContacts = [...contacts]
+    newContacts[index] = { index, fileName, name, phoneNumber, photo };
+    const newFilteredIndex = filter(newContacts, search, isAscending);
 
+    return update(state, {
+      contacts: { $set: newContacts },
+      filteredIndex: { $set: newFilteredIndex },
+    });
   }
 
   return state;

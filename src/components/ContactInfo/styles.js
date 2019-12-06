@@ -16,9 +16,5 @@ export default StyleSheet.create({
     color: 'white',
     fontSize: 24,
     alignSelf: 'center'
-  },
-  phoneNumber: {
-    color: 'beige',
-    display: 'none',
   }
 });

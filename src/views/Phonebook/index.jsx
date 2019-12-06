@@ -17,26 +17,41 @@ const Phonebook = ({ navigation }) => {
   const { contacts, filteredIndex, isAscending, search: stateSearch } = state;
   const { navigate } = navigation;
 
-  const [getAllContactFiles] = useFileSystem('Phonebook');
+  const { getAllFiles: getAllJsonFiles, newFile: newJson } = useFileSystem('Phonebook');
+  const { copyFile: copyImage } = useFileSystem('PhonebookImages');
+
+  const loadJsonFiles = useCallback(async () => {
+    const objects = await getAllJsonFiles();
+    const fromFile = objects.map(obj => ({ ...JSON.parse(obj.file), fileName: obj.name }));
+    dispatch({ type: action.INIT, payload: { contacts: fromFile  }});
+  }, [getAllJsonFiles, dispatch]);
+
+  const importContacts = useCallback(async () => {
+    const contacts = await getContactsFromPhone();
+    const fromContacts = contacts.map(obj => ({
+      id: obj.id,
+      name: obj.name,
+      phoneNumber: obj.phoneNumbers[0].number,
+      photo: obj.imageAvailable ? obj.image.uri : undefined,
+    }));
+    for (let i = 0; i < fromContacts.length; i += 1) {
+      if (typeof fromContacts[i].photo !== undefined) {
+        let newImage = await copyImage(fromContacts[i].photo, 'contact' + fromContacts[i].id);
+        console.log(newImage);
+        fromContacts[i].photo = newImage.uri;
+      }
+      let newFile = await newJson('contact' + fromContacts[i].id, JSON.stringify({ ...fromContacts[i] }));
+    }
+    await loadJsonFiles();
+  }, [contacts, getContactsFromPhone, copyImage, newJson, loadJsonFiles]);
 
   // componentDidMount (initialize contacts from file)
   useEffect(() => {
     const getFiles = async () => {
-      const objects = await getAllContactFiles();
-      const contacts = await getContactsFromPhone();
-
-      const fromFile = objects.map(obj => obj.file);
-      const fromContacts = contacts.map(obj => ({
-        name: obj.name,
-        phoneNumber: obj.phoneNumbers[0].number,
-        photo: obj.imageAvailable ? obj.image.uri : undefined,
-        }) );
-
-        console.log('lol', fromContacts);
-      dispatch({ type: action.INIT, payload: { contacts: [ ...fromFile, ...fromContacts]  }});
+      await loadJsonFiles();
     }
     getFiles();
-  }, [getAllContactFiles, getContactsFromPhone]);
+  }, []);
 
   const search = useCallback((text) => {
     dispatch({type: action.SEARCH, payload: { search: text }});
@@ -46,13 +61,14 @@ const Phonebook = ({ navigation }) => {
     dispatch({type: action.ORDER, payload: { isAscending }});
   }, [dispatch]);
 
-  const openContactForm = useCallback(() => {
-    navigate('Contact', { contactId: null, contactName: 'New Contact' })
-  }, [navigate]);
+  const openContactForm = useCallback((contactIndex = null) => {
+    navigate('Contact', { contactIndex: contactIndex, contactName: contactIndex === null ? 'New Contact' : contacts[contactIndex].name })
+  }, [navigate, contacts]);
 
   contextValue.current.search = search;
   contextValue.current.toggleOrder = toggleOrder;
   contextValue.current.openContactForm = openContactForm;
+  contextValue.current.importContacts = importContacts;
 
   return (
     <PhonebookContext.Provider value={contextValue}>

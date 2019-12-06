@@ -9,11 +9,16 @@ import styles from './styles';
 
 const defaultImage = require('../../resources/defaultPortrait.png');
 
-const ContactForm = ({ editable, name: propName, phoneNumber: propPhoneNumber, image: propImage }) => {
-  const { current: { create } } = useContext(PhonebookContext);
+const ContactForm = ({ editable: propEditable, index, name: propName, phoneNumber: propPhoneNumber, image: propImage }) => {
+  const { current: { create, update } } = useContext(PhonebookContext);
+  const [editable, setEditable] = useState(propEditable);
   const [name, setName] = useState(propName);
   const [phoneNumber, setPhoneNumber] = useState(propPhoneNumber);
   const [image, setImage] = useState(propImage);
+
+  const handleToggleEditable = useCallback((text) => {
+    setEditable(!editable);
+  }, [setEditable, editable]);
 
   const handleNameChange = useCallback((text) => {
     setName(text);
@@ -24,20 +29,24 @@ const ContactForm = ({ editable, name: propName, phoneNumber: propPhoneNumber, i
   }, [setPhoneNumber]);
 
   const handleImagePick = useCallback(({ uri }) => {
-    console.log('uri', uri);
     setImage(uri);
   }, [setImage]);
 
   const handleSubmit = useCallback(() => {
-    create(name, phoneNumber, image);
-  }, [create, name, phoneNumber, image]);
+    setEditable(false);
+    if (typeof index === 'undefined' || index === null) {
+      create(name, phoneNumber, image);
+    } else {
+      update(index, name, phoneNumber, image);
+    }
+  }, [create, update, index, name, phoneNumber, image, setEditable]);
 
   return (
     <View style={styles.container}>
       <View style={styles.imageBox}>
         <Image
           style={styles.image}
-          source={typeof image !== 'undefined' && image !== null && image !== '' ? {uri: image } : defaultImage}
+          source={typeof image !== 'undefined' && image !== null && image !== '' ? {uri: image+"?time=" + new Date() } : defaultImage}
         />
         {editable && (
           <ImagePicker style={styles.imagePicker} onPick={handleImagePick} />
@@ -47,20 +56,22 @@ const ContactForm = ({ editable, name: propName, phoneNumber: propPhoneNumber, i
         <LabelValue label="Name" value={name} editable={editable} onChange={handleNameChange} />
         <LabelValue label="Phone" value={phoneNumber} editable={editable} onChange={handlePhoneChange}  keyboardType="phone-pad"/>
       </View>
-      {editable && (
-        <Button title="Submit" style={styles.submit} disabled={name === '' || phoneNumber === ''} onPress={handleSubmit} />
-      )}
+      {editable ? (
+        <Button title="Save" style={styles.submit} disabled={name === '' || phoneNumber === ''} onPress={handleSubmit} />
+      ) : ( <Button title="Edit" style={styles.submit} onPress={handleToggleEditable} /> )}
     </View>
   );
 }
 
 ContactForm.defaultProps = {
+  index: undefined,
   name: '',
   phoneNumber: '',
   image: '',
 };
 
 ContactForm.propTypes = {
+  index: PropTypes.number,
   name: PropTypes.string,
   phoneNumber: PropTypes.string,
   image: PropTypes.string,

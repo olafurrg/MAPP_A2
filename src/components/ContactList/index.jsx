@@ -12,12 +12,12 @@ const ContactList = ({ contacts, filteredIndex }) => {
       {filteredContacts.length > 0 ? (
         <FlatList
           data={filteredContacts}
-          renderItem={({ item: { name, phoneNumber, photo } }) => <ContactInfo
+          renderItem={({ item: { index, name, photo, fileName } }) => <ContactInfo
+            index={index}
             name={name}
-            phoneNumber={phoneNumber}
             image={photo}
           />}
-          keyExtractor={(contact) => contact.name}
+          keyExtractor={(contact) => contact.name + contact.index }
         />
       ) : (
         <View style={styles.noContacts}>

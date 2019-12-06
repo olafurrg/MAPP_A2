@@ -50,12 +50,6 @@ const ImagePicker = ({ style, onPick }) => {
         <View style={styles.modal}>
           <View style={styles.imagePicker}>
             <TouchableOpacity style={styles.button} onPress={handleTakePhoto}>
-              <Entypo style={styles.icon} name="link" size={32}/>
-              <Text style={styles.text}>
-                Use Url
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={handleTakePhoto}>
               <Entypo style={styles.icon} name="camera" size={32}/>
               <Text style={styles.text}>
                 Take picture

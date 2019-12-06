@@ -7,8 +7,13 @@ import { action } from '../../routes/reducer';
 import styles from './styles';
 
 // Possibly change this up and add search filter in here
-const Toolbar = ({ isAscending, search: searchProp, hasSelectedContacts = false }) => {
-  const { current: { search, toggleOrder, openContactForm } } = useContext(PhonebookContext);
+const Toolbar = ({ isAscending, search: searchProp }) => {
+  const { current: {
+    search,
+    toggleOrder,
+    openContactForm,
+    importContacts,
+  } } = useContext(PhonebookContext);
 
   const handleSearch = useCallback((text) => {
     search(text);
@@ -22,21 +27,18 @@ const Toolbar = ({ isAscending, search: searchProp, hasSelectedContacts = false 
     openContactForm();
   }, [openContactForm]);
 
+  const handleImportPress = useCallback(() => {
+    importContacts();
+  }, [importContacts]);
+
   return (
     <View style={styles.container}>
       <View style={styles.toolbar}>
         <TouchableHighlight style={styles.toolbarAction} onPress={handleAddPress}>
           <Text style={styles.toolbarActionText}>Add Contact</Text>
         </TouchableHighlight>
-        <TouchableHighlight
-          style={styles.toolbarAction}
-          disabled={!hasSelectedContacts}
-        >
-          <Text style={styles.toolbarActionText, hasSelectedContacts ? {}
-            : { color: 'rgba(155, 155, 155, 0.5)' }}
-          >
-            Delete
-          </Text>
+        <TouchableHighlight style={styles.toolbarAction} onPress={handleImportPress}>
+          <Text style={styles.toolbarActionText}>Import</Text>
         </TouchableHighlight>
       </View>
       <View style={styles.filter}>
