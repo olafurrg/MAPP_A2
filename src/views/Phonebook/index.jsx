@@ -31,7 +31,7 @@ const Phonebook = ({ navigation }) => {
     const fromContacts = contacts.map(obj => ({
       id: obj.id,
       name: obj.name,
-      phoneNumber: obj.phoneNumbers[0].number,
+      phoneNumber: obj.phoneNumbers.length > 0 ? obj.phoneNumbers[0].number : '',
       photo: obj.imageAvailable ? obj.image.uri : undefined,
     }));
     for (let i = 0; i < fromContacts.length; i += 1) {
