@@ -10,8 +10,8 @@ const defaultImage = require('../../resources/defaultPortrait.png');
 
 //This should only be displaying the photo and name
 const ContactInfo = ({ name, phoneNumber, image }) => (
-  <View style={styles.container}>
-    <TouchableOpacity>
+  <View>
+    <TouchableOpacity style={styles.container}>
       <Image
         style={styles.image}
         source={typeof image !== 'undefined' && image !== null ? {uri: image } : defaultImage}

@@ -20,16 +20,24 @@ export default StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
-  search: {
+  filter: {
     paddingLeft: 20,
     paddingRight: 20,
     marginBottom: 20,
+    flexDirection: 'row',
+  },
+  ascendingButton: {
+    flex: 1,
   },
   searchInput: {
+    flex: 5,
     paddingLeft: 10,
     fontSize: 22,
     color: 'black',
     backgroundColor: '#ececec',
     borderRadius: 4,
+  },
+  icon: {
+    alignSelf: 'center',
   }
 });

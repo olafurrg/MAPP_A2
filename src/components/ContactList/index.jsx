@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import * as PropTypes from 'prop-types';
-import { View, FlatList } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import ContactInfo from '../ContactInfo';
 import { ContactContext } from '../../routes/context';
 import styles from './styles';
@@ -13,15 +13,22 @@ const ContactList = () => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={filteredContacts}
-        renderItem={({ item: { name, phoneNumber, photo } }) => <ContactInfo
-          name={name}
-          phoneNumber={phoneNumber}
-          image={photo}
-        />}
-        keyExtractor={(contact) => contact.name}
-      />
+      {filteredContacts.length > 0 ? (
+        <FlatList
+          data={filteredContacts}
+          renderItem={({ item: { name, phoneNumber, photo } }) => <ContactInfo
+            name={name}
+            phoneNumber={phoneNumber}
+            image={photo}
+          />}
+          keyExtractor={(contact) => contact.name}
+        />
+      ) : (
+        <View style={styles.noContacts}>
+          <Text style={styles.noContactsText}>{contacts.length === filteredContacts.length
+            ? 'No contacts created' : 'No contacts found' }</Text>
+        </View>
+      )}
     </View>
   );
 }
