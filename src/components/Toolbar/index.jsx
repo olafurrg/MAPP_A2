@@ -2,16 +2,22 @@ import React, { useContext, useState, useCallback } from 'react';
 import * as PropTypes from 'prop-types';
 import { View, Text, TextInput, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { DispatchContext } from '../../routes/context';
+import { ContactContext, DispatchContext } from '../../routes/context';
 import { action } from '../../routes/reducer';
 import styles from './styles';
 
 // Possibly change this up and add search filter in here
 const Toolbar = ({ onAdd, onRemove, hasSelectedContacts }) => {
   const dispatch = useContext(DispatchContext);
+  const { isAscending, search } = useContext(ContactContext);
+
   const handleSearch = useCallback((text) => {
     dispatch({type: action.SEARCH, payload: { search: text }});
   }, [dispatch]);
+
+  const handleOrder = useCallback((text) => {
+    dispatch({type: action.ORDER, payload: { isAscending: !isAscending }});
+  }, [dispatch, isAscending]);
 
   return (
     <View style={styles.container}>
@@ -37,8 +43,8 @@ const Toolbar = ({ onAdd, onRemove, hasSelectedContacts }) => {
           style={styles.searchInput}
           placeholder="Search..."
         />
-        <TouchableOpacity style={styles.ascendingButton}>
-          <FontAwesome style={styles.icon} name="sort-alpha-asc" size={32} />
+        <TouchableOpacity style={styles.ascendingButton} onPress={handleOrder}>
+          <FontAwesome style={styles.icon} name={isAscending ? "sort-alpha-asc" : "sort-alpha-desc"} size={32} />
         </TouchableOpacity>
       </View>
     </View>
